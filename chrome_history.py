@@ -57,13 +57,15 @@ interrupt_reason, end_time, opened, last_access_time, referrer, site_url, tab_ur
 	db_df.to_html(downloads_html_path, index=False)
 
 def web_history(filename, path):
-	history_path = path + "/history.csv"
+	history_csv_path = path + "/history.csv"
+	history_html_path = path + "/history.html"
 	history_query = "SELECT visits.id, visits.visit_time, urls.url, urls.title FROM visits INNER JOIN urls ON visits.url = urls.id"
 	conn = sqlite3.connect(filename, isolation_level=None,
 	                       detect_types=sqlite3.PARSE_COLNAMES)
 	db_df = pd.read_sql_query(history_query, conn)
 	db_df['visit_time'] = db_df['visit_time'].apply(date_from_webkit)
-	db_df.to_csv(history_path, index=False)
+	db_df.to_csv(history_csv_path, index=False)
+	db_df.to_html(history_html_path, index=False)
 
 def main():
 	parser = argparse.ArgumentParser(description='Converts Chrome History File to CSV')
